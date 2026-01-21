@@ -1,0 +1,486 @@
+---
+title: "Central Limit Theorem"
+author: "Jeremy Rappel, Carl F. Falk, Mira Saad, Jens Kreitewolf"
+date: "2026-01-20"
+format:
+  html:
+    grid: 
+      body-width: 1400px
+filters:
+  - shinylive
+---
+
+<!--
+FYI: https://www.tidyverse.org/blog/2024/10/shinylive-0-8-0/
+should be possible to compile custom packages for WebAssembly
+-->
+
+<!-- The following resources consulted to get this all working:
+At terminal: quarto add quarto-ext/shinylive
+
+Might need to render twice or so, needs to download stuff
+https://quarto.thecoatlessprofessor.com/r-shinylive-demo/
+https://github.com/coatless-quarto/r-shinylive-demo
+
+To publish is a bit tricky,
+
+Ultimately went with github pages, but not using quarto publish gh-pages
+1. Create github repo
+2. Make the app the main index file (index.qmd), at least for a first try
+3. Edit _quarto.yml file to render to docs folder
+https://quarto.org/docs/publishing/github-pages.html
+4. Push to github
+5. Edit repo on github
+https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+
+-->
+
+<!--
+######################################################################
+## Interactive Statistics Project - Module 1: Central Limit Theorem
+##
+## We thank the Association for Psychological Science for a small
+## teaching grant to help in the development of this software.
+##
+## Copyright 2025-2026 Jeremy Rappel, Carl F. Falk, Mira Saad &
+##  Jens Kreitewolf
+##
+## This program is free software: you can redistribute it and/or
+## modify it under the terms of the GNU Affero General Public License as
+## published by the Free Software Foundation, either version 3 of
+## the License, or (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+## GNU Affero General Public License for more details.
+## <http://www.gnu.org/licenses/>
+##
+-->
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 1200
+
+######################################################################
+## Interactive Statistics Project - Module 1: Central Limit Theorem
+##
+## We thank the Association for Psychological Science for a small
+## teaching grant to help in the development of this software.
+##
+## Copyright 2025-2026 Jeremy Rappel, Carl F. Falk, Mira Saad &
+##  Jens Kreitewolf
+##
+## This program is free software: you can redistribute it and/or
+## modify it under the terms of the GNU Affero General Public License as
+## published by the Free Software Foundation, either version 3 of
+## the License, or (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+## GNU Affero General Public License for more details.
+## <http://www.gnu.org/licenses/>
+##
+
+
+library(tibble) # CFF: this one also apparently required for shinylive to work
+library(shiny)
+library(munsell) # was included due to bug in getting ggplot2 to work with shinylive; still required for some reason
+library(bslib) # For bootstrap UIs
+library(bsicons) # for tooltip icons
+library(ggplot2) #include.only = c("select", "mutate"))
+
+
+infopop <- tooltip(
+  bs_icon("info-circle"),
+  "This is the distribution of all scores in the population.",
+  placement="right"
+)
+
+
+infosamp <- tooltip(
+  bs_icon("info-circle"),
+  "These are the scores from a single sample from the population. Every dot corresponds to one observation.",
+  placement="right"
+)
+
+infosampdist <- tooltip(
+  bs_icon("info-circle"),
+  "Every time we draw a sample, the mean of that sample counts as one observation in the sampling distribution.",
+  placement="right"
+)
+
+# CFF population distribution options
+popopts <- popover(
+  bs_icon("gear"),  # Gear icon
+  selectInput(
+    "distType", "Distribution Type", c("Uniform","Normal","Chi-Squared"),
+    selected = "Normal"
+  ),
+  conditionalPanel(
+    condition = "input.distType == 'Normal'", #This is javascript, thus the . notation
+    sliderInput("mean", "μ", min = 1, max = 10, value = 5, step=1),
+    sliderInput("sd", "SD", min = 1, max = 10, value = 1, step=1)
+  ), #end conditionalPanel()
+  
+  conditionalPanel(
+    condition = "input.distType == 'Uniform'",
+    sliderInput("min_limit", "Minimum", min = 1, max = 10, value = 1, step=1), 
+    sliderInput("max_limit", "Maximum", min = 1, max = 10, value = 5, step=1)
+  ), #end conditionalPanel()
+  conditionalPanel(
+    condition = "input.distType == 'Chi-Squared'",
+    sliderInput("df", "Degrees of Freedom", min = 1, max = 10, value = 5, step=1)
+  ), #end conditionalPanel()
+  checkboxInput(
+    "yaxis", "Toggle Y-Axis"
+  ),
+  placement="right"
+)
+
+#Extra settings (skewness, kurtosis) for sampling distribution pllot
+popopts_samplingdist <- popover(
+  bs_icon("gear"),  # Gear icon
+  checkboxInput("overlay", "Toggle Normal Overlay"),  
+  checkboxInput(
+    "skew", "Skewness & Kurtosis"
+  ),  
+  sliderInput("bins",
+              "Number of bins for histogram:",
+              min = 30,
+              max = 200,
+              value = 75),
+  placement="right"
+)
+
+popopts_samplingplot<- popover(
+  bs_icon("gear"),  # Gear icon
+  checkboxInput(
+    "se", "Estimated Standard Error"
+  ),
+  actionButton("prevSamp","Previous Sample"), actionButton("nextSamp","Next Sample"),
+  placement="right"
+)
+
+#instead of a bloated ui object, here we're creating a list of each card to inject later
+cards <- list(
+  navset_card_underline(
+    title = card_header("Population Distribution", infopop, popopts),
+    full_screen=TRUE,    
+    height=850,
+    nav_panel("Graph",
+      plotOutput("popPlot")#,
+      #min_height=250
+    )
+  ),
+  navset_card_underline(
+    title= card_header("Sample Values",infosamp, popopts_samplingplot), 
+    full_screen=T,
+    height=850, #JR: Fixing this to minimize the plots looking squished; may need a more dynamic solution
+    nav_panel("Graph", plotOutput("sampleValues")),
+    nav_panel("Table", tableOutput("sampleTable")),
+    selected = "Graph"
+  ),
+  navset_card_underline(
+    title= card_header("Sampling Distribution",infosampdist,popopts_samplingdist), 
+    full_screen=T,
+    height=850, #JR: Fixing this to minimize the plots looking squished; may need a more dynamic solution
+    nav_panel("Graph", plotOutput("sampPlot")),
+    nav_panel("Table", tableOutput("sampleValuesTable")),
+    selected = "Graph"
+  )
+)
+
+# Define UI for application that draws a histogram
+ui <- page_sidebar(
+  #Creates a sidebar containing option toggles
+  title = div(h5('Sampling and Sampling Distributions', style="margin: 0;"), h6('The Central Limit Theorem', style="margin: 0;")),
+  theme = bs_theme(version=5, preset="lumen"),
+  sidebar = sidebar(
+    fluidRow(actionButton("plus1", "+1 sample"),
+             actionButton("plus5", "+5 samples"),
+             actionButton("plus1000", "+ 1000 samples")
+             ),
+    fluidRow(actionButton("reset","Reset"),
+             sliderInput("sampSize", "Observations per Sample:", min=1, max=100, value=30, step=1)), #JR: Added button to reset the app
+  ),
+  layout_columns(
+    col_widths = c(-1, 7, -1),
+    cards[[1]]#, #JR: The population distribution
+  ),
+  layout_columns(
+    col_widths = c(-1, 7, -1),
+    cards[[2]]), #JR: The sample distribution
+  layout_columns(
+    col_widths = c(-1, 7, -1),
+    cards[[3]]) #JR: The sampling distribution
+  #layout_columns(col_widths = c(-2, 8),)) #JR: Combined sample table and graph
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output, session) { # JR: Added "session" to get the reset button to work; also necessary if we add introJS functionality
+  observeEvent(input$reset,
+               {session$reload()}) #JR: Restarts the session if user presses the "Reset" button
+
+    #################################
+   # Population Distribution Values#
+  #################################
+  mu <- reactive({as.numeric(input$mean)}) #Remember, these values are stored as functions
+  stdev <- reactive({input$sd})
+  min <- reactive({as.numeric(input$min_limit)})
+  max <- reactive({as.numeric(input$max_limit)})
+  distType <- reactive({input$distType})
+  df <- reactive({as.numeric(input$df)}) #JR: Updated to make sure it's a numeric value
+  
+  
+    #############################
+   # Sample Distribution Values#
+  #############################
+  N <- 10000 # CFF hardcoded total number of possible samples
+  obs <- reactive({input$sampSize})
+  se <- reactive({stdev()/sqrt(obs())}) # CFF - do we use this ever?
+  
+  whichsamp <- reactiveValues(i = 0)
+  index <- reactiveValues(i=0)
+
+  #JR: Moved these from the Population Plot object so we can access the same values for the sample plot
+  #FIXME: Looks kinda weird with for the Chi-Squared distribution
+  lower <- reactive({switch(distType(),
+                  "Normal" =mu()/stdev()-3,
+                  "Chi-Squared" =0,
+                  "Uniform" = min())})
+  upper <- reactive({switch(distType(),
+                  "Normal" =mu()/stdev()+3,
+                  "Chi-Squared" =(df()*2)+5, #JR: Stand-in, should be updated to something more dynamic/sensible
+                  "Uniform" = max())})#The lower bound of the chart; if H1 > H0, then -3 is the floor, otherwise the floor is 3SD below the H1 distribution
+  
+    ##########################
+   # Generating Sample Data #
+  ##########################
+  datasets <- reactive({
+    whichsamp$i <- 0
+    index$i <- 0
+    dat <- matrix(nrow=N,ncol=obs())
+    nobs <- obs()
+    for(i in 1:N){
+        if(distType()=="Normal"){
+          dat[i,] <- rnorm(obs(), mean=mu(),sd=stdev()) 
+        } else if (distType()=="Uniform"){
+          dat[i,] <- runif(obs(), min=min(), max = max())
+        } else if (distType()=="Chi-Squared"){
+          dat[i,] <- rchisq(obs(), df=df())      
+        }
+    }
+    return(list(dat = dat, Nsamp = N, nobs=nobs))
+  })
+  
+  observeEvent(input$plus1, { #Updates the sample size value when the relevant button is clicked
+    if ((whichsamp$i + 1)<10000) { #JR: Unsure if these are the most efficient way to avoid out-of-bounds erros
+    whichsamp$i <- whichsamp$i + 1
+    } else {whichsamp$i = 10000}
+  })
+  observeEvent(input$plus5, {
+    if ((whichsamp$i+ 5) < 10000) {
+      whichsamp$i <- whichsamp$i + 5
+    } else {whichsamp$i = 10000}
+  })
+  observeEvent(input$plus1000, {
+    if ((whichsamp$i + 1000) < 10000) {
+      whichsamp$i <- whichsamp$i + 1000
+    } else {whichsamp$i = 10000}
+  })
+  
+ #JR: This section updates the display of the sample values when using the "Previous/Next Sample Buttons"
+ #It works by updating the "index" reactive value, which is subtracted from the current sample to move things about
+  observeEvent(input$nextSamp, {
+    if ((whichsamp$i-index$i) < whichsamp$i) {
+    index$i <- index$i-1
+  }})
+  
+  observeEvent(input$prevSamp, {
+    if (whichsamp$i - index$i > 1) {
+    index$i <- index$i+1
+    }})
+  
+  ## Population plot
+  output$popPlot <- renderPlot({
+
+    popplt <- ggplot(data=data.frame(x=c(lower(),upper())),aes(x)) +
+      #The true population distribution
+      switch(input$distType,
+             "Uniform" = stat_function(fun=dunif,args=list(min=lower(),max=upper()),geom="line", linetype="dotted", color="red",xlim=c(lower(),upper())),
+             "Normal" = stat_function(fun=dnorm,args=list(mean=mu(), sd=stdev()),geom="area", linetype="dotted",fill=NA, color="red",xlim=c(lower(),upper())),
+             "Chi-Squared" = stat_function(fun=dchisq,args=list(df=df()),geom="area", linetype="dotted",fill=NA, color="red",xlim=c(lower(),upper()))) +
+      #Clears the y-axis label
+      ylab("")+
+      #Sets the x axis ticks to cover the whole plot
+      scale_x_continuous(limits=c(lower(),upper()),breaks= seq(round(lower()),round(upper()))) +
+      #Clears the y-axis ticks
+      #scale_y_continuous(breaks=NULL) +
+      theme_classic() +
+      annotate("text",x=Inf,y=Inf, label = 
+        switch(
+          input$distType,
+          "Normal" = paste0("Population Mean = ",mu()),
+          "Uniform" = paste0("Population Maximum = ",max()),
+          "Chi-Squared" = paste0("Degrees of Freedom = ",df()) #JR: Added these annotations to reflect info relevant to a particular distribution; may require some re-thinking though to tie in w/ sampling distribution means
+      ), vjust = 1, hjust = 1)+ # JR: End first annotate()
+      annotate("text",x=Inf,y=Inf, label = 
+          switch(input$distType,
+                 "Normal" = paste0("Population SD = ",stdev()),
+                 "Uniform" = paste0("Population Minimum = ",min()),
+                 "Chi-Squared" = paste0("")
+                        ), vjust = 3, hjust = 1) # JR: End second annotate()
+    
+    if (input$yaxis == FALSE){
+      popplt <- popplt + scale_y_continuous(breaks=NULL)
+    } 
+    
+    popplt
+      
+  }) #end output$popPlot
+  
+  output$sampPlot <- renderPlot({
+    alldat <- datasets() # get all pre-generated samples
+    if(whichsamp$i>0){
+      dat <- alldat$dat[1:whichsamp$i,,drop=FALSE] # grab just ones necessary for *this* plot
+    } else {
+      dat <- alldat$dat[1:2,,drop=FALSE]
+    }
+    means <- rowMeans(dat)
+    meanofmeans <- mean(means)
+    sdofmeans <- if (length(means) > 1) {sd(means)} else {1} # JR: Perhaps inefficient? Using an if/else statement as otherwise we don"t have an SD when N=1
+        # doing this necessitates changing sd() to stdev() throughout; is this how we usually compute SE? it's the SE of the simulated sampling distribution values...
+    
+    #FIXME: Skew and Kurtosis values are slighly off from what JASP gives
+    #CFF: could have a citation for where the equations come from
+    n <- whichsamp$i
+    skewness <- sum(((means-mean(means))/sd(means))^3) * (n / ((n - 1) * (n - 2))) # Sums the cubed standardized values, then multiplies them by [something]
+    skewnessSE <- sqrt((6 * n * (n - 1) / ((n - 2) * (n + 1) * (n + 3))))
+    
+    #This section for debugging skewness/kurtosis
+    #print(means)
+    #print(meanofmeans)
+    #print(sum((means-meanofmeans)^2))
+    #print(sum((means-meanofmeans)^4))
+    #print(sum(((means-mean(means))/sd(means))^3))
+    
+    s2 <- sum((means-meanofmeans)^2)
+    s4 <- sum((means-meanofmeans)^4)
+    v <- s2 / (n-1)
+    b <- s4 / (v^2)
+    kurtosis <- ((n * (n + 1)) / ((n - 1) * (n - 2) * (n - 3))) * b + ((-3 * (n - 1)^2) / ((n - 2) * (n - 3)))
+    kurtosisSE <- 2 * skewnessSE * sqrt((n^2 - 1) / ((n - 3) * (n + 5)))
+    
+    lower <- meanofmeans - 3*sdofmeans #JR: If we're changing the layout of the x-axis, won't need these anymore
+    upper <- meanofmeans + 3*sdofmeans
+    
+    #binwidth= (upper-lower)/30
+    #binwidth= (base::max(means)-base::min(means))/input$bins
+    
+    plt <- ggplot(data=as.data.frame(means), aes(x=means)) +
+      #Clears the y-axis label
+      ylab("Frequency")+
+      #Sets the x axis ticks to cover the whole plot
+      #scale_x_continuous(limits=c(lower,upper),breaks= seq(round(lower),round(upper),by=1)) +
+      scale_x_continuous(limits=c(lower(),upper()),breaks= seq(round(lower()),round(upper()))) +
+      theme_classic()
+      
+    if(whichsamp$i>0){
+      #plt <- plt + geom_histogram(color="black", fill="white",binwidth = binwidth) +
+        plt <- plt + geom_histogram(color="black", fill="white",bins = input$bins) +        
+        annotate("text",x=Inf,y=Inf, label = paste0("Sampling Dist. Mean = ", round(meanofmeans,3)), vjust = 1, hjust = 1) +
+        annotate("text",x=Inf,y=Inf, label = paste0("Total # of Samples = ", whichsamp$i), vjust = 3, hjust = 1) +
+        annotate("text",x=Inf,y=Inf, label = paste0("Standard Deviation = ",round(sdofmeans,3)), vjust = 5, hjust = 1)
+        
+        if(input$overlay == TRUE) {
+          ggplot_build(plt)$data[[1]] -> hist_layer
+          bin_width <- hist_layer$x[2] - hist_layer$x[1]
+          plt <- plt + stat_function(fun = function(x) dnorm(x, mean = meanofmeans, sd = sdofmeans) * whichsamp$i*bin_width)
+          #TODO: geom_histogram is defaulting to 1/30th of the data range; approximating this here, could use some refinement
+        } 
+        
+        if(input$skew == TRUE) {
+          plt <- plt + annotate("text",x=Inf,y=Inf, label = paste0("Skewness = ", round(skewness,3)," (SE=",round(skewnessSE,3),")"), vjust = 7, hjust = 1) +
+            annotate("text",x=Inf,y=Inf, label = paste0("Kurtosis = ", round(kurtosis,3)," (SE=",round(kurtosisSE,3),")"), vjust = 9, hjust = 1)
+        } 
+    
+    }
+  plt
+    
+  }) #end output$sampPlot
+  
+  output$sampleTable <- renderTable({
+    if(whichsamp$i>0){
+      alldat <- datasets() # get all pre-generated samples
+      dat <- as.data.frame(alldat$dat[whichsamp$i-index$i,]) # grab just one of them for *this* sample plot
+      colname <- paste0("Sample", whichsamp$i-index$i)
+      colnames(dat) <- colname
+      return(as.data.frame(dat))
+    } else {
+      return(data.frame())
+    }
+    }) #end output$sampleTable
+
+  output$sampleValues <- renderPlot({
+    
+    alldat <- datasets() # get all pre-generated samples
+    
+    if(whichsamp$i>0){
+      dat <- as.data.frame(alldat$dat[whichsamp$i-index$i,]) # grab just one of them for *this* sample plot
+      colname <- paste0("Sample", whichsamp$i-index$i)
+    } else {
+      dat <- as.data.frame(alldat$dat[1,]) # grab just one of them for *this* sample plot
+      colname <- "dat"
+    }
+    
+    colnames(dat) <- colname
+    sample_mean <- colMeans(dat)
+    sample_sd <- sd(dat[,1]) #JR: Adding this in, may risk information overload though
+    sample_se <- sample_sd/sqrt(obs()) #JR: Adding this in, may risk information overload though
+    
+    plt <- ggplot(data=as.matrix(dat), aes(x=!!sym(colname))) +
+      xlab(NULL)
+      if(whichsamp$i>0){
+      plt <- plt + geom_dotplot(color="black",method="histodot", dotsize=.5) +
+        scale_y_continuous(name = "", breaks = NULL) +
+        annotate("text",x=Inf,y=Inf, label = paste0("Sample Mean = ",round(sample_mean,3)), vjust = 1, hjust = 1) +# CFF changed sample_mean()
+        annotate("text",x=Inf,y=Inf, label = paste0("Sample SD = ",round(sample_sd,3)), vjust = 3, hjust = 1) +
+        xlab(colname)
+         #JR: Added this in, may be information overload though
+      }
+    plt <- plt +
+      #Clears the y-axis label
+      #ylab("Frequency")+
+      #Sets the x axis ticks to cover the whole plot
+      scale_x_continuous(limits=c(lower(),upper()),breaks= seq(round(lower()),round(upper()))) +
+      #coord_cartesian(ratio=.5, expand=F) +
+      theme_classic()
+    
+    if(input$se == TRUE) {
+      plt + annotate("text",x=Inf,y=Inf, label = paste0("Estimated Standard Error = ",round(sample_se,3)), vjust = 5, hjust = 1)
+    } else {
+    plt }
+  }) #
+  
+  output$sampleValuesTable <- renderTable({
+    alldat <- datasets() # get all pre-generated samples
+    if(whichsamp$i>0){
+      dat <- alldat$dat[1:whichsamp$i,,drop=FALSE] # grab just ones necessary for *this* plot
+      means <- rowMeans(dat)
+      return(as.data.frame(means))
+    } else {
+      return(data.frame())
+    }
+    means <- rowMeans(dat)
+    
+    
+  })
+} #end server()
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+
+```

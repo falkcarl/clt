@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jeremy Rappel, Carl F. Falk, Mira Saad, Jens Kreitewolf">
+<meta name="dcterms.date" content="2026-01-20">
+
+<title>Central Limit Theorem – CLT</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e7efcd9cf88e711670b1579b253ba86a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content=".">
+<script src="site_libs/quarto-contrib/shinylive-0.9.1/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="site_libs/quarto-contrib/shinylive-0.9.1/shinylive/run-python-blocks.js" type="module"></script>
+<link href="site_libs/quarto-contrib/shinylive-0.9.1/shinylive/shinylive.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Central Limit Theorem</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jeremy Rappel, Carl F. Falk, Mira Saad, Jens Kreitewolf </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 20, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+FYI: https://www.tidyverse.org/blog/2024/10/shinylive-0-8-0/
+should be possible to compile custom packages for WebAssembly
+-->
+<!-- The following resources consulted to get this all working:
+At terminal: quarto add quarto-ext/shinylive
+
+Might need to render twice or so, needs to download stuff
+https://quarto.thecoatlessprofessor.com/r-shinylive-demo/
+https://github.com/coatless-quarto/r-shinylive-demo
+
+To publish is a bit tricky,
+
+Ultimately went with github pages, but not using quarto publish gh-pages
+1. Create github repo
+2. Make the app the main index file (index.qmd), at least for a first try
+3. Edit _quarto.yml file to render to docs folder
+https://quarto.org/docs/publishing/github-pages.html
+4. Push to github
+5. Edit repo on github
+https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+
+-->
+<!--
+######################################################################
+## Interactive Statistics Project - Module 1: Central Limit Theorem
+##
+## We thank the Association for Psychological Science for a small
+## teaching grant to help in the development of this software.
+##
+## Copyright 2025-2026 Jeremy Rappel, Carl F. Falk, Mira Saad &
+##  Jens Kreitewolf
+##
+## This program is free software: you can redistribute it and/or
+## modify it under the terms of the GNU Affero General Public License as
+## published by the Free Software Foundation, either version 3 of
+## the License, or (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+## GNU Affero General Public License for more details.
+## <http://www.gnu.org/licenses/>
+##
+-->
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 1200
+
+######################################################################
+## Interactive Statistics Project - Module 1: Central Limit Theorem
+##
+## We thank the Association for Psychological Science for a small
+## teaching grant to help in the development of this software.
+##
+## Copyright 2025-2026 Jeremy Rappel, Carl F. Falk, Mira Saad &amp;
+##  Jens Kreitewolf
+##
+## This program is free software: you can redistribute it and/or
+## modify it under the terms of the GNU Affero General Public License as
+## published by the Free Software Foundation, either version 3 of
+## the License, or (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+## GNU Affero General Public License for more details.
+## &lt;http://www.gnu.org/licenses/&gt;
+##
+
+# CFF: one of these is needed by shinylive to work, but which one?
+#library(lattice)
+#library(MASS)
+#library(Matrix)
+#library(mgcv)
+#library(nlme)
+#library(pillar)
+#library(pkgconfig)
+library(tibble) # CFF: it's this one
+#library(utf8)
+
+library(shiny)
+library(munsell) # was included due to bug in getting ggplot2 to work with shinylive; still required for some reason
+library(bslib) # For bootstrap UIs
+library(bsicons) # for tooltip icons
+library(ggplot2) #include.only = c("select", "mutate"))
+
+
+infopop &lt;- tooltip(
+  bs_icon("info-circle"),
+  "This is the distribution of all scores in the population.",
+  placement="right"
+)
+
+
+infosamp &lt;- tooltip(
+  bs_icon("info-circle"),
+  "These are the scores from a single sample from the population. Every dot corresponds to one observation.",
+  placement="right"
+)
+
+infosampdist &lt;- tooltip(
+  bs_icon("info-circle"),
+  "Every time we draw a sample, the mean of that sample counts as one observation in the sampling distribution.",
+  placement="right"
+)
+
+# CFF population distribution options
+popopts &lt;- popover(
+  bs_icon("gear"),  # Gear icon
+  selectInput(
+    "distType", "Distribution Type", c("Uniform","Normal","Chi-Squared"),
+    selected = "Normal"
+  ),
+  conditionalPanel(
+    condition = "input.distType == 'Normal'", #This is javascript, thus the . notation
+    sliderInput("mean", "μ", min = 1, max = 10, value = 5, step=1),
+    sliderInput("sd", "SD", min = 1, max = 10, value = 1, step=1)
+  ), #end conditionalPanel()
+  
+  conditionalPanel(
+    condition = "input.distType == 'Uniform'",
+    sliderInput("min_limit", "Minimum", min = 1, max = 10, value = 1, step=1), 
+    sliderInput("max_limit", "Maximum", min = 1, max = 10, value = 5, step=1)
+  ), #end conditionalPanel()
+  conditionalPanel(
+    condition = "input.distType == 'Chi-Squared'",
+    sliderInput("df", "Degrees of Freedom", min = 1, max = 10, value = 5, step=1)
+  ), #end conditionalPanel()
+  checkboxInput(
+    "yaxis", "Toggle Y-Axis"
+  ),
+  placement="right"
+)
+
+#Extra settings (skewness, kurtosis) for sampling distribution pllot
+popopts_samplingdist &lt;- popover(
+  bs_icon("gear"),  # Gear icon
+  checkboxInput("overlay", "Toggle Normal Overlay"),  
+  checkboxInput(
+    "skew", "Skewness &amp; Kurtosis"
+  ),  
+  sliderInput("bins",
+              "Number of bins for histogram:",
+              min = 30,
+              max = 200,
+              value = 75),
+  placement="right"
+)
+
+popopts_samplingplot&lt;- popover(
+  bs_icon("gear"),  # Gear icon
+  checkboxInput(
+    "se", "Estimated Standard Error"
+  ),
+  actionButton("prevSamp","Previous Sample"), actionButton("nextSamp","Next Sample"),
+  placement="right"
+)
+
+#instead of a bloated ui object, here we're creating a list of each card to inject later
+cards &lt;- list(
+  navset_card_underline(
+    title = card_header("Population Distribution", infopop, popopts),
+    full_screen=TRUE,    
+    height=850,
+    nav_panel("Graph",
+      plotOutput("popPlot")#,
+      #min_height=250
+    )
+  ),
+  navset_card_underline(
+    title= card_header("Sample Values",infosamp, popopts_samplingplot), 
+    full_screen=T,
+    height=850, #JR: Fixing this to minimize the plots looking squished; may need a more dynamic solution
+    nav_panel("Graph", plotOutput("sampleValues")),
+    nav_panel("Table", tableOutput("sampleTable")),
+    selected = "Graph"
+  ),
+  navset_card_underline(
+    title= card_header("Sampling Distribution",infosampdist,popopts_samplingdist), 
+    full_screen=T,
+    height=850, #JR: Fixing this to minimize the plots looking squished; may need a more dynamic solution
+    nav_panel("Graph", plotOutput("sampPlot")),
+    nav_panel("Table", tableOutput("sampleValuesTable")),
+    selected = "Graph"
+  )
+)
+
+# Define UI for application that draws a histogram
+ui &lt;- page_sidebar(
+  #Creates a sidebar containing option toggles
+  title = div(h5('Sampling and Sampling Distributions', style="margin: 0;"), h6('The Central Limit Theorem', style="margin: 0;")),
+  theme = bs_theme(version=5, preset="lumen"),
+  sidebar = sidebar(
+    fluidRow(actionButton("plus1", "+1 sample"),
+             actionButton("plus5", "+5 samples"),
+             actionButton("plus1000", "+ 1000 samples")
+             ),
+    fluidRow(actionButton("reset","Reset"),
+             sliderInput("sampSize", "Observations per Sample:", min=1, max=100, value=30, step=1)), #JR: Added button to reset the app
+  ),
+  layout_columns(
+    col_widths = c(-1, 7, -1),
+    cards[[1]]#, #JR: The population distribution
+  ),
+  layout_columns(
+    col_widths = c(-1, 7, -1),
+    cards[[2]]), #JR: The sample distribution
+  layout_columns(
+    col_widths = c(-1, 7, -1),
+    cards[[3]]) #JR: The sampling distribution
+  #layout_columns(col_widths = c(-2, 8),)) #JR: Combined sample table and graph
+)
+
+# Define server logic required to draw a histogram
+server &lt;- function(input, output, session) { # JR: Added "session" to get the reset button to work; also necessary if we add introJS functionality
+  observeEvent(input$reset,
+               {session$reload()}) #JR: Restarts the session if user presses the "Reset" button
+
+    #################################
+   # Population Distribution Values#
+  #################################
+  mu &lt;- reactive({as.numeric(input$mean)}) #Remember, these values are stored as functions
+  stdev &lt;- reactive({input$sd})
+  min &lt;- reactive({as.numeric(input$min_limit)})
+  max &lt;- reactive({as.numeric(input$max_limit)})
+  distType &lt;- reactive({input$distType})
+  df &lt;- reactive({as.numeric(input$df)}) #JR: Updated to make sure it's a numeric value
+  
+  
+    #############################
+   # Sample Distribution Values#
+  #############################
+  N &lt;- 10000 # CFF hardcoded total number of possible samples
+  obs &lt;- reactive({input$sampSize})
+  se &lt;- reactive({stdev()/sqrt(obs())}) # CFF - do we use this ever?
+  
+  whichsamp &lt;- reactiveValues(i = 0)
+  index &lt;- reactiveValues(i=0)
+
+  #JR: Moved these from the Population Plot object so we can access the same values for the sample plot
+  #FIXME: Looks kinda weird with for the Chi-Squared distribution
+  lower &lt;- reactive({switch(distType(),
+                  "Normal" =mu()/stdev()-3,
+                  "Chi-Squared" =0,
+                  "Uniform" = min())})
+  upper &lt;- reactive({switch(distType(),
+                  "Normal" =mu()/stdev()+3,
+                  "Chi-Squared" =(df()*2)+5, #JR: Stand-in, should be updated to something more dynamic/sensible
+                  "Uniform" = max())})#The lower bound of the chart; if H1 &gt; H0, then -3 is the floor, otherwise the floor is 3SD below the H1 distribution
+  
+    ##########################
+   # Generating Sample Data #
+  ##########################
+  datasets &lt;- reactive({
+    whichsamp$i &lt;- 0
+    index$i &lt;- 0
+    dat &lt;- matrix(nrow=N,ncol=obs())
+    nobs &lt;- obs()
+    for(i in 1:N){
+        if(distType()=="Normal"){
+          dat[i,] &lt;- rnorm(obs(), mean=mu(),sd=stdev()) 
+        } else if (distType()=="Uniform"){
+          dat[i,] &lt;- runif(obs(), min=min(), max = max())
+        } else if (distType()=="Chi-Squared"){
+          dat[i,] &lt;- rchisq(obs(), df=df())      
+        }
+    }
+    return(list(dat = dat, Nsamp = N, nobs=nobs))
+  })
+  
+  observeEvent(input$plus1, { #Updates the sample size value when the relevant button is clicked
+    if ((whichsamp$i + 1)&lt;10000) { #JR: Unsure if these are the most efficient way to avoid out-of-bounds erros
+    whichsamp$i &lt;- whichsamp$i + 1
+    } else {whichsamp$i = 10000}
+  })
+  observeEvent(input$plus5, {
+    if ((whichsamp$i+ 5) &lt; 10000) {
+      whichsamp$i &lt;- whichsamp$i + 5
+    } else {whichsamp$i = 10000}
+  })
+  observeEvent(input$plus1000, {
+    if ((whichsamp$i + 1000) &lt; 10000) {
+      whichsamp$i &lt;- whichsamp$i + 1000
+    } else {whichsamp$i = 10000}
+  })
+  
+ #JR: This section updates the display of the sample values when using the "Previous/Next Sample Buttons"
+ #It works by updating the "index" reactive value, which is subtracted from the current sample to move things about
+  observeEvent(input$nextSamp, {
+    if ((whichsamp$i-index$i) &lt; whichsamp$i) {
+    index$i &lt;- index$i-1
+  }})
+  
+  observeEvent(input$prevSamp, {
+    if (whichsamp$i - index$i &gt; 1) {
+    index$i &lt;- index$i+1
+    }})
+  
+  ## Population plot
+  output$popPlot &lt;- renderPlot({
+
+    popplt &lt;- ggplot(data=data.frame(x=c(lower(),upper())),aes(x)) +
+      #The true population distribution
+      switch(input$distType,
+             "Uniform" = stat_function(fun=dunif,args=list(min=lower(),max=upper()),geom="line", linetype="dotted", color="red",xlim=c(lower(),upper())),
+             "Normal" = stat_function(fun=dnorm,args=list(mean=mu(), sd=stdev()),geom="area", linetype="dotted",fill=NA, color="red",xlim=c(lower(),upper())),
+             "Chi-Squared" = stat_function(fun=dchisq,args=list(df=df()),geom="area", linetype="dotted",fill=NA, color="red",xlim=c(lower(),upper()))) +
+      #Clears the y-axis label
+      ylab("")+
+      #Sets the x axis ticks to cover the whole plot
+      scale_x_continuous(limits=c(lower(),upper()),breaks= seq(round(lower()),round(upper()))) +
+      #Clears the y-axis ticks
+      #scale_y_continuous(breaks=NULL) +
+      theme_classic() +
+      annotate("text",x=Inf,y=Inf, label = 
+        switch(
+          input$distType,
+          "Normal" = paste0("Population Mean = ",mu()),
+          "Uniform" = paste0("Population Maximum = ",max()),
+          "Chi-Squared" = paste0("Degrees of Freedom = ",df()) #JR: Added these annotations to reflect info relevant to a particular distribution; may require some re-thinking though to tie in w/ sampling distribution means
+      ), vjust = 1, hjust = 1)+ # JR: End first annotate()
+      annotate("text",x=Inf,y=Inf, label = 
+          switch(input$distType,
+                 "Normal" = paste0("Population SD = ",stdev()),
+                 "Uniform" = paste0("Population Minimum = ",min()),
+                 "Chi-Squared" = paste0("")
+                        ), vjust = 3, hjust = 1) # JR: End second annotate()
+    
+    if (input$yaxis == FALSE){
+      popplt &lt;- popplt + scale_y_continuous(breaks=NULL)
+    } 
+    
+    popplt
+      
+  }) #end output$popPlot
+  
+  output$sampPlot &lt;- renderPlot({
+    alldat &lt;- datasets() # get all pre-generated samples
+    if(whichsamp$i&gt;0){
+      dat &lt;- alldat$dat[1:whichsamp$i,,drop=FALSE] # grab just ones necessary for *this* plot
+    } else {
+      dat &lt;- alldat$dat[1:2,,drop=FALSE]
+    }
+    means &lt;- rowMeans(dat)
+    meanofmeans &lt;- mean(means)
+    sdofmeans &lt;- if (length(means) &gt; 1) {sd(means)} else {1} # JR: Perhaps inefficient? Using an if/else statement as otherwise we don"t have an SD when N=1
+        # doing this necessitates changing sd() to stdev() throughout; is this how we usually compute SE? it's the SE of the simulated sampling distribution values...
+    
+    #FIXME: Skew and Kurtosis values are slighly off from what JASP gives
+    #CFF: could have a citation for where the equations come from
+    n &lt;- whichsamp$i
+    skewness &lt;- sum(((means-mean(means))/sd(means))^3) * (n / ((n - 1) * (n - 2))) # Sums the cubed standardized values, then multiplies them by [something]
+    skewnessSE &lt;- sqrt((6 * n * (n - 1) / ((n - 2) * (n + 1) * (n + 3))))
+    
+    #This section for debugging skewness/kurtosis
+    #print(means)
+    #print(meanofmeans)
+    #print(sum((means-meanofmeans)^2))
+    #print(sum((means-meanofmeans)^4))
+    #print(sum(((means-mean(means))/sd(means))^3))
+    
+    s2 &lt;- sum((means-meanofmeans)^2)
+    s4 &lt;- sum((means-meanofmeans)^4)
+    v &lt;- s2 / (n-1)
+    b &lt;- s4 / (v^2)
+    kurtosis &lt;- ((n * (n + 1)) / ((n - 1) * (n - 2) * (n - 3))) * b + ((-3 * (n - 1)^2) / ((n - 2) * (n - 3)))
+    kurtosisSE &lt;- 2 * skewnessSE * sqrt((n^2 - 1) / ((n - 3) * (n + 5)))
+    
+    lower &lt;- meanofmeans - 3*sdofmeans #JR: If we're changing the layout of the x-axis, won't need these anymore
+    upper &lt;- meanofmeans + 3*sdofmeans
+    
+    #binwidth= (upper-lower)/30
+    #binwidth= (base::max(means)-base::min(means))/input$bins
+    
+    plt &lt;- ggplot(data=as.data.frame(means), aes(x=means)) +
+      #Clears the y-axis label
+      ylab("Frequency")+
+      #Sets the x axis ticks to cover the whole plot
+      #scale_x_continuous(limits=c(lower,upper),breaks= seq(round(lower),round(upper),by=1)) +
+      scale_x_continuous(limits=c(lower(),upper()),breaks= seq(round(lower()),round(upper()))) +
+      theme_classic()
+      
+    if(whichsamp$i&gt;0){
+      #plt &lt;- plt + geom_histogram(color="black", fill="white",binwidth = binwidth) +
+        plt &lt;- plt + geom_histogram(color="black", fill="white",bins = input$bins) +        
+        annotate("text",x=Inf,y=Inf, label = paste0("Sampling Dist. Mean = ", round(meanofmeans,3)), vjust = 1, hjust = 1) +
+        annotate("text",x=Inf,y=Inf, label = paste0("Total # of Samples = ", whichsamp$i), vjust = 3, hjust = 1) +
+        annotate("text",x=Inf,y=Inf, label = paste0("Standard Deviation = ",round(sdofmeans,3)), vjust = 5, hjust = 1)
+        
+        if(input$overlay == TRUE) {
+          ggplot_build(plt)$data[[1]] -&gt; hist_layer
+          bin_width &lt;- hist_layer$x[2] - hist_layer$x[1]
+          plt &lt;- plt + stat_function(fun = function(x) dnorm(x, mean = meanofmeans, sd = sdofmeans) * whichsamp$i*bin_width)
+          #TODO: geom_histogram is defaulting to 1/30th of the data range; approximating this here, could use some refinement
+        } 
+        
+        if(input$skew == TRUE) {
+          plt &lt;- plt + annotate("text",x=Inf,y=Inf, label = paste0("Skewness = ", round(skewness,3)," (SE=",round(skewnessSE,3),")"), vjust = 7, hjust = 1) +
+            annotate("text",x=Inf,y=Inf, label = paste0("Kurtosis = ", round(kurtosis,3)," (SE=",round(kurtosisSE,3),")"), vjust = 9, hjust = 1)
+        } 
+    
+    }
+  plt
+    
+  }) #end output$sampPlot
+  
+  output$sampleTable &lt;- renderTable({
+    if(whichsamp$i&gt;0){
+      alldat &lt;- datasets() # get all pre-generated samples
+      dat &lt;- as.data.frame(alldat$dat[whichsamp$i-index$i,]) # grab just one of them for *this* sample plot
+      colname &lt;- paste0("Sample", whichsamp$i-index$i)
+      colnames(dat) &lt;- colname
+      return(as.data.frame(dat))
+    } else {
+      return(data.frame())
+    }
+    }) #end output$sampleTable
+
+  output$sampleValues &lt;- renderPlot({
+    
+    alldat &lt;- datasets() # get all pre-generated samples
+    
+    if(whichsamp$i&gt;0){
+      dat &lt;- as.data.frame(alldat$dat[whichsamp$i-index$i,]) # grab just one of them for *this* sample plot
+      colname &lt;- paste0("Sample", whichsamp$i-index$i)
+    } else {
+      dat &lt;- as.data.frame(alldat$dat[1,]) # grab just one of them for *this* sample plot
+      colname &lt;- "dat"
+    }
+    
+    colnames(dat) &lt;- colname
+    sample_mean &lt;- colMeans(dat)
+    sample_sd &lt;- sd(dat[,1]) #JR: Adding this in, may risk information overload though
+    sample_se &lt;- sample_sd/sqrt(obs()) #JR: Adding this in, may risk information overload though
+    
+    plt &lt;- ggplot(data=as.matrix(dat), aes(x=!!sym(colname))) +
+      xlab(NULL)
+      if(whichsamp$i&gt;0){
+      plt &lt;- plt + geom_dotplot(color="black",method="histodot", dotsize=.5) +
+        scale_y_continuous(name = "", breaks = NULL) +
+        annotate("text",x=Inf,y=Inf, label = paste0("Sample Mean = ",round(sample_mean,3)), vjust = 1, hjust = 1) +# CFF changed sample_mean()
+        annotate("text",x=Inf,y=Inf, label = paste0("Sample SD = ",round(sample_sd,3)), vjust = 3, hjust = 1) +
+        xlab(colname)
+         #JR: Added this in, may be information overload though
+      }
+    plt &lt;- plt +
+      #Clears the y-axis label
+      #ylab("Frequency")+
+      #Sets the x axis ticks to cover the whole plot
+      scale_x_continuous(limits=c(lower(),upper()),breaks= seq(round(lower()),round(upper()))) +
+      #coord_cartesian(ratio=.5, expand=F) +
+      theme_classic()
+    
+    if(input$se == TRUE) {
+      plt + annotate("text",x=Inf,y=Inf, label = paste0("Estimated Standard Error = ",round(sample_se,3)), vjust = 5, hjust = 1)
+    } else {
+    plt }
+  }) #
+  
+  output$sampleValuesTable &lt;- renderTable({
+    alldat &lt;- datasets() # get all pre-generated samples
+    if(whichsamp$i&gt;0){
+      dat &lt;- alldat$dat[1:whichsamp$i,,drop=FALSE] # grab just ones necessary for *this* plot
+      means &lt;- rowMeans(dat)
+      return(as.data.frame(means))
+    } else {
+      return(data.frame())
+    }
+    means &lt;- rowMeans(dat)
+    
+    
+  })
+} #end server()
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+</code></pre>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/falkcarl/clt/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/falkcarl/clt/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
