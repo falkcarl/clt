@@ -247,11 +247,11 @@ server <- function(input, output, session) { # JR: Added "session" to get the re
   #JR: Moved these from the Population Plot object so we can access the same values for the sample plot
   #FIXME: Looks kinda weird with for the Chi-Squared distribution
   lower <- reactive({switch(distType(),
-                  "Normal" =mu()/stdev()-3,
+                  "Normal" =mu()-3*stdev(),
                   "Chi-Squared" =0,
                   "Uniform" = min())})
   upper <- reactive({switch(distType(),
-                  "Normal" =mu()/stdev()+3,
+                  "Normal" =mu()+3*stdev(),
                   "Chi-Squared" =(df()*2)+5, #JR: Stand-in, should be updated to something more dynamic/sensible
                   "Uniform" = max())})#The lower bound of the chart; if H1 > H0, then -3 is the floor, otherwise the floor is 3SD below the H1 distribution
   
