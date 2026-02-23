@@ -1,5 +1,6 @@
 .Rhistory
 .Rproj.user/
+*.Rproj
 rsconnect/
 .RData
 .Ruserdata

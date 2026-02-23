@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jeremy Rappel, Carl F. Falk, Mira Saad, Jens Kreitewolf">
-<meta name="dcterms.date" content="2026-01-20">
+<meta name="dcterms.date" content="2026-02-23">
 
 <title>Central Limit Theorem – CLT</title>
 <style>
@@ -106,7 +106,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 20, 2026</p>
+      <p class="date">February 23, 2026</p>
     </div>
   </div>
   
@@ -190,17 +190,8 @@ https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a
 ## &lt;http://www.gnu.org/licenses/&gt;
 ##
 
-# CFF: one of these is needed by shinylive to work, but which one?
-#library(lattice)
-#library(MASS)
-#library(Matrix)
-#library(mgcv)
-#library(nlme)
-#library(pillar)
-#library(pkgconfig)
-library(tibble) # CFF: it's this one
-#library(utf8)
 
+library(tibble) # CFF: this one also apparently required for shinylive to work
 library(shiny)
 library(munsell) # was included due to bug in getting ggplot2 to work with shinylive; still required for some reason
 library(bslib) # For bootstrap UIs
@@ -363,11 +354,11 @@ server &lt;- function(input, output, session) { # JR: Added "session" to get the
   #JR: Moved these from the Population Plot object so we can access the same values for the sample plot
   #FIXME: Looks kinda weird with for the Chi-Squared distribution
   lower &lt;- reactive({switch(distType(),
-                  "Normal" =mu()/stdev()-3,
+                  "Normal" =mu()-3*stdev(),
                   "Chi-Squared" =0,
                   "Uniform" = min())})
   upper &lt;- reactive({switch(distType(),
-                  "Normal" =mu()/stdev()+3,
+                  "Normal" =mu()+3*stdev(),
                   "Chi-Squared" =(df()*2)+5, #JR: Stand-in, should be updated to something more dynamic/sensible
                   "Uniform" = max())})#The lower bound of the chart; if H1 &gt; H0, then -3 is the floor, otherwise the floor is 3SD below the H1 distribution
   
