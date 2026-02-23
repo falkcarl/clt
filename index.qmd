@@ -1,7 +1,7 @@
 ---
 title: "Central Limit Theorem"
 author: "Jeremy Rappel, Carl F. Falk, Mira Saad, Jens Kreitewolf"
-date: "2026-01-20"
+date: "2026-02-23"
 format:
   html:
     grid: 
