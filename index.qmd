@@ -1,7 +1,7 @@
 ---
 title: "Central Limit Theorem"
 author: "Jeremy Rappel, Carl F. Falk, Mira Saad, Jens Kreitewolf"
-date: "2026-02-23"
+date: "2026-03-16"
 format:
   html:
     grid: 
@@ -57,6 +57,12 @@ https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a
 ## <http://www.gnu.org/licenses/>
 ##
 -->
+
+```{r setup}
+#| echo: false
+knitr::opts_chunk$set(echo = FALSE)
+library(htmltools)
+```
 
 ```{shinylive-r}
 #| standalone: true
@@ -483,4 +489,789 @@ server <- function(input, output, session) { # JR: Added "session" to get the re
 shinyApp(ui = ui, server = server)
 
 
+```
+
+
+
+```{r, results='asis'}
+library(htmltools)
+HTML(
+     ################ header ################
+    "<br>
+    <details><summary><strong style='font-size:20px;'>SECTION 1: INTRODUCTION</strong></summary> ",
+  
+    
+      ################ question 1.1 ################
+   ##context##
+       "<form>",
+    "<br>
+    <p>As context for this exercise, suppose we are studying social media use among undergraduate students enrolled in statistics courses.</p>",
+    "<p>As part of this research study, we first want to estimate average student social media usage for the class.Participants in our study will report the number of hours they spend on social media in a typical day.</p>",
+    "</form>",
+    
+     ##question##
+    "<form>",
+    "<br>
+    <p><strong>Question 1.1: What is the population?</strong></p>", 
+   paste0(
+# fitb("all undergraduate students in statistics courses"),
+   "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary style='cursor:pointer;'>Reveal Answer</summary>
+       <p>All undergraduate students in statistics courses</p>
+     </details>",
+
+  
+   
+  ################ question 1.2 ################
+    ##question##
+
+  paste0(
+    "
+    <br>
+    <p><strong>Question 1.2: Where do we want this sample from?</strong></p>" ),
+ 
+  "<form>",  
+  "<input type='radio' name='q1' value='1'> The population of undergraduate students",
+  "<br>
+  <input type='radio' name='q1' value='2'> A sample of undergraduate students",
+  "<form>",
+  
+  "<br>
+  <details style='margin-top:10px; margin-left:20px;'>
+  <summary>Reveal Answer</summary>A sample of univeristy students   </details>",
+      "<br><br>",
+  "</details>"
+
+   )
+  )
+```
+
+
+```{r}
+HTML(
+        ################ header ################
+    "<br>
+    <details><summary><strong style='font-size:20px;'>SECTION 2: SAMPLING</strong></summary> ",
+    
+          ################ question 2.1 ################
+        ##context##
+    "<form>",
+    "<br>
+    <p>Refer to the “population distribution” section of the app to see what the distribution of values for the variable(s) are in the population. Practice 'Sampling' from them population.</p>",
+    "<p>Recalling the rational of this experiment, answer the following questions:</p>",
+    "</form>",
+      
+       ##Question##
+    "<form>",
+    "<br>
+    <p><strong>Question 2.1: What is our value of interest?</strong></p>", 
+      paste0(
+   #fitb("University students' average number of hours spent on social media"),
+         "<input>",
+    "<br>
+   <details style='margin-left:20px;'><summary>Reveal Answer</summary>University students' average number of hours spent on social media</details>",
+    "</form>",
+   
+   
+                  ################ question 2.2. ################
+      ##Question##
+    "<form>",
+    "<br><br>
+    <p><strong>Question 2.2: Where do we want this sample from?</strong></p>", 
+   "</form>",   
+   
+   paste0(
+  
+     "<form>",  
+  "<input type='radio' name='q1' value='1'> The population of undergraduate students",
+  "<br>
+  <input type='radio' name='q1' value='2'> A sample of undergraduate students",
+  "<form>",
+  
+  "<br>
+  <details style='margin-top:10px;style='margin-left:20px;'>
+  <summary>Reveal Answer</summary>A sample of undergraduate students</details>",
+    "</form>",
+   
+  
+    ################ question 2.3 ################
+    ##question##
+  "<form>",
+    "<br>
+    <p><strong>Question 2.3: If we were conducting a real study, would we know what the population mean is prior to doing the study?</strong></p>", 
+      paste0(
+   #fitb("No, we would not. Even after conducting the study we would not know the population mean, we would only have an estimate of it."),
+         "<input>",
+    "<br>
+   <details style='margin-left:20px;'><summary>Reveal Answer</summary>No, we would not. Even after conducting the study we would not know the population mean, we would only have an estimate of it.</details>",
+   "<br></form>",
+  
+
+     ################ question 2.4 ################
+    ##question##
+  "<form>",
+    "<br>
+    <p><strong>Question 2.4: Given that we can’t measure the entire population of university students, how can we gain data to conduct our social media study?</strong></p>", 
+      paste0(
+  #fitb("We instead can collect a sample of students"),
+         "<input>",
+    "<br>
+   <details style='margin-left:20px;'><summary>Reveal Answer</summary>We instead can collect a sample of students</details>",
+   "<br></form>",
+
+     "</details>"
+        )
+      )
+    )
+  )
+)
+```
+
+
+```{r, results='asis'}
+HTML(
+     ################ header ################
+    "<br>
+    <details><summary><strong style='font-size:20px;'>SECTION 3: SAMPLE & MEANS </strong></summary> ",
+    
+      ################ question 3.1 ################
+     ##context##
+    "<form>",
+    "
+    <br>
+    <p>Context: Suppose we decide to obtain a random sample of 5 students from this class and then ask each of them to report the number of hours they spend on social media on a typical day. To do this, ensure that the “sample size” is set to 5 and then click on “+1” to generate a single sample. Then, refer to the “sample values” section of the app. On one tab you should see a histogram (graph) of the distribution of these 5 values. On another tab, you should see the actual numerical values for these 5 participants.</p>
+    <br>
+    <p><strong>Question 3.1: What is a sample?</strong></p>", 
+   paste0(
+  #fitb("A sample is a series of observations taken from a larger population, often with the intention of estimating a population parameter, such as the population mean"),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>A sample is a series of observations taken from a larger population, often with the intention of estimating a population parameter, such as the population mean
+  </p>
+  </details>",
+  
+    ################ question 3.2 ################
+ ##question##
+    "<form>",
+    "
+    <br>
+    <p><strong>Question 3.2:  What is this sample mean an estimate of?</strong></p>", 
+  
+  paste0(
+ # fitb("The sample mean is an estimate of the population mean."),
+    "<input>",
+     "
+     <details style='margin-top:10px; margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The sample mean is an estimate of the population mean.</p>,
+  </details>",
+    "<br>",
+  
+  
+  ################ question 3.3 ################
+    ##instruction##
+    "<form>",
+    "<br>
+    <p><strong>*For the following next 3 questions, calculate - by hand - the mean of the 5 sample values...*</strong></p>
+    <br>
+    <p><strong>Question 3.3: Where does the mean of these 5 values appear in the app?</strong></p>", 
+   paste0(
+  #fitb("You should see the mean displayed on the sample values graph."),
+    "<input>",
+     "
+     <details style='margin-top:10px; margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>You should see the mean displayed on the sample values graph.</p>,
+  </details>",
+    "<br>",
+  
+   ################ question 3.4 ################
+     ##question##
+    "<form>",
+    "
+    <p><strong>Question 3.4: Is the sample mean identical to the corresponding population parameter?</strong></p>", 
+   
+    paste0(
+  #fitb("It should not be identical, though by chance it could be very close!"),
+       "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>It should not be identical, though by chance it could be very close!</p>
+
+  </details>",
+  
+  
+   ################ question 3.5 ################
+     ##question##
+    "<form>",
+    "<br>
+    <p><strong>Question 3.5: Is the mean you collected from your sampled students identical to the population mean?</strong></p>", 
+   
+    paste0(
+  #fitb("It should not be identical, though by chance it could be very close!"),
+       "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>It should not be identical, though by chance it could be very close!</p>
+  </details>",
+  
+   "</details>"
+    )
+     )
+    )
+   )
+  )
+)
+```
+
+
+```{r, results='asis'}
+
+HTML(
+     ################ header ################
+    "<br>
+    <details><summary><strong style='font-size:20px;'>SECTION 4: SAMPLING DISTRIBUTIONS </strong></summary> ",
+    
+      ################ question 4.0 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p style='font-size:18px'><strong>Question 4.0</strong></p>
+    <p>Refer to the “sampling distribution” section of the app. At this point, you should see a histogram with a single bar.</p>
+    <p>Compare the (approximate) value of that bar to the sample mean. Notice that they are identical. In the previous question, you calculated the mean number of social media hours for your first sample of 5 participants.</p>
+  
+    <p><strong>What does each value in the sampling distribution correspond to?</strong></p>", 
+   paste0(
+  #fitb("Every datapoint in the sampling distribution represents a mean value from a single sample"),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>Every datapoint in the sampling distribution represents a mean value from a single sample</p>
+  </details>"
+  ),
+
+  
+      ################ question 4.1 ################
+     ##instruction##
+    "<form>",
+    "<br>
+    <p style='font-size:18px'><strong>Question 4.1</strong></p>
+    <p>Imagine we repeat our study. To do this, draw another sample by clicking “+1” again. You should see the sample values section update to have 5 new values. The sample values, along with this sample’s mean, are now based on 2 sets of 5 participant samples.</p>
+    <p>With every new collected sample of students, you would add the participants to the already collected sample of your students and recalculate the mean. Note how the sampling distribution histogram should also have another value added to it.</p>
+    <p>As your sample changes with every round of data collection, the mean of this growing sample will concurrently change. Compare this new mean to the sample mean of the first sample. Try this process several more times to see what happens to the sampling distribution’s mean.</p>
+    
+  
+    <p><strong>What happens to the sampling distribution's mean as the samples increase?</strong></p>", 
+   paste0(
+ # fitb("Every datapoint in the sampling distribution represents a mean value from a single sample"),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>Every datapoint in the sampling distribution represents a mean value from a single sample</p>
+  </details>"
+  ),
+  
+  
+
+      ################ question 4.2 ################
+     ##instruction##
+    "<form>",
+    "<br>
+     <p style='font-size:18px'><strong>Question 4.2</strong></p>
+    <p>So far, you have examined 2 distributions: the population distribution (appearing as a line graph), and the sampling distribution (appearing as a histogram).</p>
+    <p>By now you should understand that the sampling distribution is not a distribution of individual scores, rather the scores of all your sample’s means.Note that a distribution of the individual scores is called a sample distribution. For example, a sampling distribution of the number of hours of student’s social media use would show 5 points (n=5) for each student’s response. This distribution is also referred to as a frequency distribution.</p>
+    <p>The sampling distribution, as discussed above, would illustrate only that group’s mean hours of social media use.</p>
+    
+    <p><strong>Can a scientist gain data about the whole population?</strong></p>", 
+   paste0(
+  #fitb("No, that would be impossible."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>No, that would be impossible</p>
+  </details>"
+   ),
+  
+    
+    ################ question 4.3 ################
+     ##question##
+    "<form>",
+    "
+    <br>
+    <p style='font-size:18px'><strong>Question 4.3</strong></p>
+  <p>You have just received some funding and can finally begin your experiment. Imagine you have conducted all your data collection and are ready to start analyzing.</p>
+  <p><strong>What would the initial steps of your analysis look like?</strong></p>",
+  
+   paste0(
+  #fitb("The statistics we went through above describes the very first steps you would take once you collected your data. First, you would want to see the distribution of hours of social media use in your sample: generate a sample distribution. This step is important as it is the first step in determining whether or not your sample breaks any assumptions required for certain analyses. Then, you would calculate the mean of all your samples. This mean will be an integral part of your analyses. How this mean is used will be discussed in the next module. For now, using what we have discussed so far in this module, you have set up the basic components of your analyses."),
+   "<input>",
+   "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The statistics we went through above describes the very first steps you would take once you collected your data. First, you would want to see the distribution of hours of social media use in your sample: generate a sample distribution. This step is important as it is the first step in determining whether or not your sample breaks any assumptions required for certain analyses (a topic we will discuss in later modules). Then, you would calculate the mean of all your samples. This mean will be an integral part of your analyses. How this mean is used will be discussed in the next module. For now, using what we have discussed so far in this module, you have set up the basic components of your analyses</p>
+  </details>
+  <br>"
+   ),
+   "</details>"
+  
+)
+
+```
+
+```{r result='asis'}
+
+HTML(
+     ################ header ################
+    "<br>
+    <details><summary><strong style='font-size:20px;'>SECTION 5: REPEATED SAMPLING </strong></summary> ",
+    
+      ################ question 5.0 ################
+    #Instructions#
+     "<form>",
+    "<br>
+    <p>Next, generate many samples. You can click on +1000” to add 1000 samples to the sampling distribution. This is like repeating the experiment 1000 more times. Inspect what the sampling distribution looks like in relation to the population distribution.</p>",
+  
+    "
+    <br>
+     <p><strong>Question 5.0</strong></p>
+    <p>Toggle the “overlay normal” option to overlay what a normal distribution would look like.</p>
+   
+     <p><strong>Roughly what shape is the sampling distribution?</strong></p>",
+   
+   paste0(
+  #fitb("It should be symmetric, and kind of 'Normal' looking"),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>It should be symmetric, and kind of 'Normal' looking</p>
+  </details>"
+  ),
+  
+  
+    ################ question 5.1 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 5.1:What is the mean of the sampling distribution, and how does it compare to the population mean?</strong></p>",
+   
+   paste0(
+  #fitb("The mean of the sampling distribution should be fairly close to the population mean. Theoretically, if a statistic is unbiased, the mean of the sampling distribution will be the same as the corresponding population parameter. Here, the mean of the sampling distribution is the same as the mean of the population."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The mean of the sampling distribution should be fairly close to the population mean. Theoretically, if a statistic is unbiased, the mean of the sampling distribution will be the same as the corresponding population parameter. Here, the mean of the sampling distribution is the same as the mean of the population.</p>
+  </details>"
+  ),
+  
+  
+    ################ question 5.2 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 5.2: Is the standard deviation of the sampling distribution smaller or larger than the population standard deviation?</strong></p>",
+   
+   paste0(
+  #fitb("It should be smaller than the population standard deviation."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>It should be smaller than the population standard deviation.</p>
+  </details>"
+  ),
+  
+     ################ question 5.3 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 5.3</strong></p>
+    <p>Suppose instead of doing the experiment with a sample size of 5, we decided instead to use a sample size of 30. Make this change in the app in the section that specifies the sample size. If you would like to generate one sample at this sample size to inspect the sample values, please do so by clicking “+1”. Then, generate many samples by clicking “+1000” to inspect the sampling distribution.</p>
+   <br>
+    <p><strong>What do you notice about the shape of the sampling distribution?</strong></p>",
+    
+   paste0(
+  #fitb("The sampling distribution should be roughly symmetric and normal."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>It should be smaller than the population standard deviation.</p>
+  </details>"
+  ),
+  
+
+   ################ question 5.4 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 5.4: What do you notice about the shape of the sampling distribution?</strong></p>",
+    
+   paste0(
+  #fitb("The sampling distribution should be roughly symmetric and normal."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The sampling distribution should be roughly symmetric and normal.</p>
+  </details>"
+  ),
+  
+  
+   ################ question 5.5 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 5.5: Conceptually, do you think increasing the sample size will result in sample means more or less accurately estimating the population mean? </strong></p>", 
+    
+   paste0(
+  #fitb("The mean of the sampling distribution should be approximately the same as that of the population. The standard deviation of the sampling distribution should be smaller than it was when n=5 was the sample size."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The mean of the sampling distribution should be approximately the same as that of the population. The standard deviation of the sampling distribution should be smaller than it was when n=5 was the sample size.</p>
+  </details>"
+  ),
+  
+
+  ################ question 5.6 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 5.6: With respect to how our variable is being measured, how do we expect our analysis of the mean to change if we were to decrease our sample size?</strong></p>",
+    
+   paste0(
+  #fitb("That the mean number of student social media use is converging to the “true” mean. Your mean is getting more and more accurate with more samples!"),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>That the mean number of student social media use is converging to the “true” mean. Your mean is getting more and more accurate with more samples!</p>
+  </details>"
+  ),
+  
+ 
+   ################ question 5.7 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 5.7: What part of the sampling distribution can help us assess how accurately the mean is being estimated by our sample?</strong></p>",
+    
+   paste0(
+  #fitb("Visually, the sampling distribution should look narrower than it did when n=5."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>Visually, the sampling distribution should look narrower than it did when n=5.</p>
+  </details>"
+  ),
+  
+      "</details>"
+   )
+
+```
+
+
+```{r results='asis'}
+
+HTML(
+     ################ header ################
+    "<br>
+    <details><summary><strong style='font-size:20px;'>SECTION 6: STANDARD ERROR </strong></summary> ",
+    
+      ################ question 6.0 ################
+    #Instructions#
+     "<form>",
+    "<br>
+    <p>Context: The standard deviation of the sampling distribution (for the sample means) has a special name: the standard error (of the mean). Assuming a fixed sample size, there are several ways we can compute the actual standard error (of the mean):
+
+1) If we know the population standard deviation, or
+
+2)If we repeat our experiment many (e.g., thousands) of times, we can literally compute the standard deviation of the sample means. 
+
+If we only have a single sample and don’t know the population standard deviation, it is possible to estimate the standard error of the mean</p>",
+   
+  paste0(
+    "
+    <br>
+    <p><strong>Question 6.0: Which of the following BEST describes standard error?</strong></p>" ),
+ 
+  "<form>",  
+  "<input type='radio' name='q2' value='1'> The average distance of individual data points from the population mean.",
+  "<br>
+  <input type='radio' name='q2' value='2'> The variability of scores within a single sample.",
+  "<br>
+   <input type='radio' name='q2' value='3'> The standard deviation of the sampling distribution of a test statistic.",
+  "<br>
+   <input type='radio' name='q2' value='4'> The difference between the sample mean and the population mean",
+
+   paste0(
+  #fitb("(1) The average distance of individual data points from the population mean.."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>(1) The average distance of individual data points from the population mean..</p>
+  </details>"
+  ),
+
+    ################ question 6.1 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 6.1: What mean is the standard deviation calculated with?</strong></p>",
+    
+   paste0(
+  #fitb("The sample mean"),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The sample mean</p>
+  </details>"
+  ),
+
+   ################ question 6.2 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 6.2: What mean is the standard ERROR calculated with?</strong></p>",
+    
+   paste0(
+  #fitb("The population mean"),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The population mean</p>
+  </details>"
+  ),
+
+ ################ question 6.3 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 6.3: While both the standard deviation and standard error give you information about data’s deviation from a mean, how are the deviations different?</strong></p>",
+    
+   paste0(
+  #fitb("While the standard deviation tells you how much each data point deviates from the sample mean, your standard deviation tells you how much your sample means deviate from your population mean. In other words, your standard deviation tells you how much your sampled data are spread out from your sample mean. Your standard error tells you how much all your sample’s means deviate (from sample to sample, rather than from data point to data point) around the population mean."),
+  
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>While the standard deviation tells you how much each data point deviates from the sample mean, your standard deviation tells you how much your sample means deviate from your population mean. In other words, your standard deviation tells you how much your sampled data are spread out from your sample mean. Your standard error tells you how much all your sample’s means deviate (from sample to sample, rather than from data point to data point) around the population mean.</p>
+  </details>"
+  ),
+
+  "</details>"
+
+)
+
+```
+
+
+```{r results='asis'}
+
+
+HTML(
+     ################ header ################
+    "<br>
+    <details><summary><strong style='font-size:20px;'>SECTION 7: DISTRIBUTIONS </strong></summary> ",
+    
+      ################ question 7.0 ################
+    #Instructions#
+     "<form>",
+    "<br>
+    <p>Background: The shape of the distribution of sample means tends to be normal. It is guaranteed to be normal if either (i) the population from which the samples are obtained is normal, or (ii) the sample size is n ≥ 30.</p>
+    <br>
+    
+    <p><strong>Question 7.0: If your distribution of sample means is approximately normal, does this guarantee that the population distribution is normal?</strong></p>",
+    
+paste0(
+  #fitb("Given the small sample size, the sample distribution would remain skewed."),
+   "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>Given the small sample size, the sample distribution would remain skewed.</p>
+  </details>"
+  ),
+
+   ################ question 7.1 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 7.1: If the population distribution is not normal, what happens to the shape of the sampling distribution of the mean as sample size increases?</strong></p>",
+    
+   paste0(
+  #fitb("The shape of the distribution will become normal if the sample size is large enough."),
+   "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The shape of the distribution will become normal if the sample size is large enough.</p>
+  </details>"
+  ),
+
+
+ ################ question 7.2 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 7.2: If the population distribution is not normal, what happens to the shape of the sampling distribution of the mean as sample size increases?</strong></p>",
+    
+   paste0(
+  #fitb("The shape of the distribution will become normal if the sample size is large enough."),
+   "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The shape of the distribution will become normal if the sample size is large enough.</p>
+  </details>"
+  ),
+
+    ################ question 7.3  ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 7.3: Imagine that the population distribution of student screen time is highly skewed to the right, because a small number of teens use their phones for extremely long hours. You take random samples of n = 50 teenagers many times and plots the sampling distribution of the sample mean?</strong></p>",
+    
+   paste0(
+  #fitb("Even though the population is skewed, the Central Limit Theorem tells us that with a large sample size (n = 50), the sampling distribution of the mean will be approximately normal."),
+   "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>Even though the population is skewed, the Central Limit Theorem tells us that with a large sample size (n = 50), the sampling distribution of the mean will be approximately normal.</p>
+  </details>"
+   ),
+
+"<br>",
+
+  "</details>"
+)
+
+```
+
+```{r results='asis'}
+
+
+HTML(
+     ################ header ################
+    "<br>
+    <details><summary><strong style='font-size:20px;'> SECTION 8: CENTRAL LIMIT THEOREM (CLT) </strong></summary> ",
+    
+      ################ question 8.0 ################
+    #Instructions#
+     "<form>",
+    "<br>
+    <p>Background: The CLT states that: for a sufficiently large sample size, the distribution of sample means will approximate a normal (bell curve) distribution, regardless of the shape of the original population distribution (Xang et al., 2023). Note that: The CLT shows that the variability of sample means (the standard error) decreases as sample size increases.</p>
+    <p>
+    In sum, there are 3 components to the CLT: 
+
+(1) You take 1 sample with large n -> You take the sample’s mean
+
+(2) Then you take many samples (keeping the sample size constant) -> You take each sample’s mean
+
+(3) Then, you plot all the means of your samples (not of the individual data)  
+    </p>",
+    
+paste0(
+    "<br>
+    <p><strong>Question 8.0: Which of the following best illustrates the Central Limit Theorem?</strong></p>" 
+    ),
+ 
+  "<form>",  
+  "<input type='radio' name='q3' value='1'> The population becomes normal as sample size increases.",
+  "<br>
+  <input type='radio' name='q3' value='2'> The sample mean always equals the population mean.",
+  "<br>
+   <input type='radio' name='q3' value='3'> The sampling distribution of the mean approaches normality as sample size increases, regardless of population shape.",
+  "<br>
+   <input type='radio' name='q3' value='4'> The sample distribution matches the population distribution exactly.",
+
+   paste0(
+  #fitb("(3) The sampling distribution of the mean approaches normality as sample size increases, regardless of population shape."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>(3) The sampling distribution of the mean approaches normality as sample size increases, regardless of population shape.</p>
+  </details>"
+  ),
+
+ ################ question 8.1 ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 8.1</strong></p>
+    <p>As discussed, you’ve taken the basic steps required to conduct an experiment. These steps are helpful because with your repeated sampling of your population, you are left with a normally distributed sampling distribution.
+    
+    This normal shape of your sampling means is a fundamental assumption of all the next analyses (which have been hinted at throughout this module) that will be further described in the upcoming modules.
+
+    Without a normal distribution of your sample means (a normally distributed sampling distribution), you can’t use it to make inferences about the population mean.
+    </p>
+    <p><strong>Does the Central Limit Theorem require the population distribution to be normal?</strong></p>",
+    
+   paste0(
+  #fitb("No, the major advantage of the CLT is that the population distribution does not need to be normal. The CLT holds even when the population distribution is skewed or irregular, as long as the sample size is large enough."),
+    "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>No, the major advantage of the CLT is that the population distribution does not need to be normal. The CLT holds even when the population distribution is skewed or irregular, as long as the sample size is large enough.</p>
+  </details>"
+  ),
+
+ ################ question 8.2  ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 8.2: What is the standard deviation of the sampling distribution of the mean called?</strong></p>",
+    
+   paste0(
+  #fitb("The standard error of the sampling distribution."),
+   "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>The standard error of the sampling distribution.</p>
+  </details>"
+   ),
+
+ ################ question 8.3  ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 8.3: What is the minimum sample size commonly considered “large enough” for the CLT to apply in many practical situations?</strong></p>",
+    
+   paste0(
+  #fitb("A sample size of n ≥ 30 is often considered large enough for the CLT to give a good approximation. (This can vary depending on how skewed the population is)."),
+   "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>A sample size of n ≥ 30 is often considered large enough for the CLT to give a good approximation. (This can vary depending on how skewed the population is).</p>
+  </details>"
+   ),
+
+################ question 8.4  ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 8.4: Why is the Central Limit Theorem especially valuable when the population distribution of screen time is not normal?</strong></p>",
+    
+   paste0(
+  #fitb("Because it allows researchers to use normal-based inference (confidence intervals, hypothesis tests) on sample means even when the population is skewed, as long as the sample size is large. This will be discussed in greater detail in the upcoming modules."),
+   "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>Because it allows researchers to use normal-based inference (confidence intervals, hypothesis tests) on sample means even when the population is skewed, as long as the sample size is large. This will be discussed in greater detail in the upcoming modules.</p>
+  </details>"
+   ),
+
+################ question 8.5  ################
+    #Instructions#
+     "<form>",
+    "<br>
+     <p><strong>Question 8.5: How would the sampling distribution change if the experimenter took more samples of the same size versus larger samples?</strong></p>",
+    
+   paste0(
+  #fitb("Larger samples make the distribution more normal and less variable; taking more samples does not change the shape, only gives more estimates."),
+   "<input>",
+     "<details style='margin-top:10px;margin-left:20px;'>
+       <summary>Reveal Answer</summary>
+       <p>Larger samples make the distribution more normal and less variable; taking more samples does not change the shape, only gives more estimates.</p>
+  </details>"
+   ),
+
+"<br>",
+
+"</details>"
+
+)
 ```

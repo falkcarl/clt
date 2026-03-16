@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jeremy Rappel, Carl F. Falk, Mira Saad, Jens Kreitewolf">
-<meta name="dcterms.date" content="2026-02-23">
+<meta name="dcterms.date" content="2026-03-16">
 
 <title>Central Limit Theorem – CLT</title>
 <style>
@@ -31,15 +31,17 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e7efcd9cf88e711670b1579b253ba86a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ddfbbb83f0644b69d44b4231c6499848.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <meta name="shinylive:serviceworker_dir" content=".">
 <script src="site_libs/quarto-contrib/shinylive-0.9.1/shinylive/load-shinylive-sw.js" type="module"></script>
 <script src="site_libs/quarto-contrib/shinylive-0.9.1/shinylive/run-python-blocks.js" type="module"></script>
@@ -76,7 +78,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="fullcontent">
+<body class="fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
 <!-- content -->
@@ -106,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 23, 2026</p>
+      <p class="date">March 16, 2026</p>
     </div>
   </div>
   
@@ -590,241 +592,488 @@ server &lt;- function(input, output, session) { # JR: Added "session" to get the
 shinyApp(ui = ui, server = server)
 
 </code></pre>
+<br>
+    <details><summary><strong style="font-size:20px;">SECTION 1: INTRODUCTION</strong></summary>  <form> <br>
+    <p>As context for this exercise, suppose we are studying social media use among undergraduate students enrolled in statistics courses.</p> <p>As part of this research study, we first want to estimate average student social media usage for the class.Participants in our study will report the number of hours they spend on social media in a typical day.</p> </form> <form> <br>
+    <p><strong>Question 1.1: What is the population?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary style="cursor:pointer;">Reveal Answer</summary>
+       <p>All undergraduate students in statistics courses</p>
+     </details>
+    <br>
+    <p><strong>Question 1.2: Where do we want this sample from?</strong></p><input type="radio" name="q1" value="1"> The population of undergraduate students<br>
+  <input type="radio" name="q1" value="2"> A sample of undergraduate students<br>
+  <details style="margin-top:10px; margin-left:20px;">
+  <summary>Reveal Answer</summary>A sample of univeristy students   </details><br><br></form></details>
+<div class="cell">
+<div class="cell-output-display">
+<br>
+    <details><summary><strong style="font-size:20px;">SECTION 2: SAMPLING</strong></summary>   <br>
+    <p>Refer to the “population distribution” section of the app to see what the distribution of values for the variable(s) are in the population. Practice 'Sampling' from them population.</p> <p>Recalling the rational of this experiment, answer the following questions:</p>  <form> <br>
+    <p><strong>Question 2.1: What is our value of interest?</strong></p> <input><br>
+   <details style="margin-left:20px;"><summary>Reveal Answer</summary>University students' average number of hours spent on social media</details></form><form><br><br>
+    <p><strong>Question 2.2: Where do we want this sample from?</strong></p></form><form><input type="radio" name="q1" value="1"> The population of undergraduate students<br>
+  <input type="radio" name="q1" value="2"> A sample of undergraduate students<br>
+  <details style="margin-top:10px;style=" margin-left:20px;'="">
+  <summary>Reveal Answer</summary>A sample of undergraduate students</details></form><form><br>
+    <p><strong>Question 2.3: If we were conducting a real study, would we know what the population mean is prior to doing the study?</strong></p><input><br>
+   <details style="margin-left:20px;"><summary>Reveal Answer</summary>No, we would not. Even after conducting the study we would not know the population mean, we would only have an estimate of it.</details><br></form><form><br>
+    <p><strong>Question 2.4: Given that we can’t measure the entire population of university students, how can we gain data to conduct our social media study?</strong></p><input><br>
+   <details style="margin-left:20px;"><summary>Reveal Answer</summary>We instead can collect a sample of students</details><br></form></details>
+</div>
+</div>
+<br>
+    <details><summary><strong style="font-size:20px;">SECTION 3: SAMPLE &amp; MEANS </strong></summary>  <form> 
+    <br>
+    <p>Context: Suppose we decide to obtain a random sample of 5 students from this class and then ask each of them to report the number of hours they spend on social media on a typical day. To do this, ensure that the “sample size” is set to 5 and then click on “+1” to generate a single sample. Then, refer to the “sample values” section of the app. On one tab you should see a histogram (graph) of the distribution of these 5 values. On another tab, you should see the actual numerical values for these 5 participants.</p>
+    <br>
+    <p><strong>Question 3.1: What is a sample?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>A sample is a series of observations taken from a larger population, often with the intention of estimating a population parameter, such as the population mean
+  </p>
+  </details>
+    <br>
+    <p><strong>Question 3.2:  What is this sample mean an estimate of?</strong></p><input>
+     <details style="margin-top:10px; margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The sample mean is an estimate of the population mean.</p>,
+  </details><br><br>
+    <p><strong>*For the following next 3 questions, calculate - by hand - the mean of the 5 sample values...*</strong></p>
+    <br>
+    <p><strong>Question 3.3: Where does the mean of these 5 values appear in the app?</strong></p><input>
+     <details style="margin-top:10px; margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>You should see the mean displayed on the sample values graph.</p>,
+  </details><br>
+    <p><strong>Question 3.4: Is the sample mean identical to the corresponding population parameter?</strong></p><input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>It should not be identical, though by chance it could be very close!</p>
+
+  </details><br>
+    <p><strong>Question 3.5: Is the mean you collected from your sampled students identical to the population mean?</strong></p><input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>It should not be identical, though by chance it could be very close!</p>
+  </details></form></details>
+<br>
+    <details><summary><strong style="font-size:20px;">SECTION 4: SAMPLING DISTRIBUTIONS </strong></summary>   <br>
+     <p style="font-size:18px"><strong>Question 4.0</strong></p>
+    <p>Refer to the “sampling distribution” section of the app. At this point, you should see a histogram with a single bar.</p>
+    <p>Compare the (approximate) value of that bar to the sample mean. Notice that they are identical. In the previous question, you calculated the mean number of social media hours for your first sample of 5 participants.</p>
+  
+    <p><strong>What does each value in the sampling distribution correspond to?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>Every datapoint in the sampling distribution represents a mean value from a single sample</p>
+  </details>  <br>
+    <p style="font-size:18px"><strong>Question 4.1</strong></p>
+    <p>Imagine we repeat our study. To do this, draw another sample by clicking “+1” again. You should see the sample values section update to have 5 new values. The sample values, along with this sample’s mean, are now based on 2 sets of 5 participant samples.</p>
+    <p>With every new collected sample of students, you would add the participants to the already collected sample of your students and recalculate the mean. Note how the sampling distribution histogram should also have another value added to it.</p>
+    <p>As your sample changes with every round of data collection, the mean of this growing sample will concurrently change. Compare this new mean to the sample mean of the first sample. Try this process several more times to see what happens to the sampling distribution’s mean.</p>
+    
+  
+    <p><strong>What happens to the sampling distribution's mean as the samples increase?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>Every datapoint in the sampling distribution represents a mean value from a single sample</p>
+  </details>  <br>
+     <p style="font-size:18px"><strong>Question 4.2</strong></p>
+    <p>So far, you have examined 2 distributions: the population distribution (appearing as a line graph), and the sampling distribution (appearing as a histogram).</p>
+    <p>By now you should understand that the sampling distribution is not a distribution of individual scores, rather the scores of all your sample’s means.Note that a distribution of the individual scores is called a sample distribution. For example, a sampling distribution of the number of hours of student’s social media use would show 5 points (n=5) for each student’s response. This distribution is also referred to as a frequency distribution.</p>
+    <p>The sampling distribution, as discussed above, would illustrate only that group’s mean hours of social media use.</p>
+    
+    <p><strong>Can a scientist gain data about the whole population?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>No, that would be impossible</p>
+  </details>  
+    <br>
+    <p style="font-size:18px"><strong>Question 4.3</strong></p>
+  <p>You have just received some funding and can finally begin your experiment. Imagine you have conducted all your data collection and are ready to start analyzing.</p>
+  <p><strong>What would the initial steps of your analysis look like?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The statistics we went through above describes the very first steps you would take once you collected your data. First, you would want to see the distribution of hours of social media use in your sample: generate a sample distribution. This step is important as it is the first step in determining whether or not your sample breaks any assumptions required for certain analyses (a topic we will discuss in later modules). Then, you would calculate the mean of all your samples. This mean will be an integral part of your analyses. How this mean is used will be discussed in the next module. For now, using what we have discussed so far in this module, you have set up the basic components of your analyses</p>
+  </details>
+  <br> </details>
+<div class="cell" data-result="asis">
+<div class="cell-output-display">
+<br>
+    <details><summary><strong style="font-size:20px;">SECTION 5: REPEATED SAMPLING </strong></summary>   <br>
+    <p>Next, generate many samples. You can click on +1000” to add 1000 samples to the sampling distribution. This is like repeating the experiment 1000 more times. Inspect what the sampling distribution looks like in relation to the population distribution.</p> 
+    <br>
+     <p><strong>Question 5.0</strong></p>
+    <p>Toggle the “overlay normal” option to overlay what a normal distribution would look like.</p>
+   
+     <p><strong>Roughly what shape is the sampling distribution?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>It should be symmetric, and kind of 'Normal' looking</p>
+  </details>  <br>
+     <p><strong>Question 5.1:What is the mean of the sampling distribution, and how does it compare to the population mean?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The mean of the sampling distribution should be fairly close to the population mean. Theoretically, if a statistic is unbiased, the mean of the sampling distribution will be the same as the corresponding population parameter. Here, the mean of the sampling distribution is the same as the mean of the population.</p>
+  </details>  <br>
+     <p><strong>Question 5.2: Is the standard deviation of the sampling distribution smaller or larger than the population standard deviation?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>It should be smaller than the population standard deviation.</p>
+  </details>  <br>
+     <p><strong>Question 5.3</strong></p>
+    <p>Suppose instead of doing the experiment with a sample size of 5, we decided instead to use a sample size of 30. Make this change in the app in the section that specifies the sample size. If you would like to generate one sample at this sample size to inspect the sample values, please do so by clicking “+1”. Then, generate many samples by clicking “+1000” to inspect the sampling distribution.</p>
+   <br>
+    <p><strong>What do you notice about the shape of the sampling distribution?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>It should be smaller than the population standard deviation.</p>
+  </details>  <br>
+     <p><strong>Question 5.4: What do you notice about the shape of the sampling distribution?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The sampling distribution should be roughly symmetric and normal.</p>
+  </details>  <br>
+     <p><strong>Question 5.5: Conceptually, do you think increasing the sample size will result in sample means more or less accurately estimating the population mean? </strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The mean of the sampling distribution should be approximately the same as that of the population. The standard deviation of the sampling distribution should be smaller than it was when n=5 was the sample size.</p>
+  </details>  <br>
+     <p><strong>Question 5.6: With respect to how our variable is being measured, how do we expect our analysis of the mean to change if we were to decrease our sample size?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>That the mean number of student social media use is converging to the “true” mean. Your mean is getting more and more accurate with more samples!</p>
+  </details>  <br>
+     <p><strong>Question 5.7: What part of the sampling distribution can help us assess how accurately the mean is being estimated by our sample?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>Visually, the sampling distribution should look narrower than it did when n=5.</p>
+  </details> </details>
+</div>
+</div>
+<br>
+    <details><summary><strong style="font-size:20px;">SECTION 6: STANDARD ERROR </strong></summary>   <br>
+    <p>Context: The standard deviation of the sampling distribution (for the sample means) has a special name: the standard error (of the mean). Assuming a fixed sample size, there are several ways we can compute the actual standard error (of the mean):
+
+1) If we know the population standard deviation, or
+
+2)If we repeat our experiment many (e.g., thousands) of times, we can literally compute the standard deviation of the sample means. 
+
+If we only have a single sample and don’t know the population standard deviation, it is possible to estimate the standard error of the mean</p> 
+    <br>
+    <p><strong>Question 6.0: Which of the following BEST describes standard error?</strong></p>  <input type="radio" name="q2" value="1"> The average distance of individual data points from the population mean. <br>
+  <input type="radio" name="q2" value="2"> The variability of scores within a single sample. <br>
+   <input type="radio" name="q2" value="3"> The standard deviation of the sampling distribution of a test statistic. <br>
+   <input type="radio" name="q2" value="4"> The difference between the sample mean and the population mean <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>(1) The average distance of individual data points from the population mean..</p>
+  </details>  <br>
+     <p><strong>Question 6.1: What mean is the standard deviation calculated with?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The sample mean</p>
+  </details>  <br>
+     <p><strong>Question 6.2: What mean is the standard ERROR calculated with?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The population mean</p>
+  </details>  <br>
+     <p><strong>Question 6.3: While both the standard deviation and standard error give you information about data’s deviation from a mean, how are the deviations different?</strong></p> <details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>While the standard deviation tells you how much each data point deviates from the sample mean, your standard deviation tells you how much your sample means deviate from your population mean. In other words, your standard deviation tells you how much your sampled data are spread out from your sample mean. Your standard error tells you how much all your sample’s means deviate (from sample to sample, rather than from data point to data point) around the population mean.</p>
+  </details> </details>
+<br>
+    <details><summary><strong style="font-size:20px;">SECTION 7: DISTRIBUTIONS </strong></summary>   <br>
+    <p>Background: The shape of the distribution of sample means tends to be normal. It is guaranteed to be normal if either (i) the population from which the samples are obtained is normal, or (ii) the sample size is n ≥ 30.</p>
+    <br>
+    
+    <p><strong>Question 7.0: If your distribution of sample means is approximately normal, does this guarantee that the population distribution is normal?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>Given the small sample size, the sample distribution would remain skewed.</p>
+  </details>  <br>
+     <p><strong>Question 7.1: If the population distribution is not normal, what happens to the shape of the sampling distribution of the mean as sample size increases?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The shape of the distribution will become normal if the sample size is large enough.</p>
+  </details>  <br>
+     <p><strong>Question 7.2: If the population distribution is not normal, what happens to the shape of the sampling distribution of the mean as sample size increases?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The shape of the distribution will become normal if the sample size is large enough.</p>
+  </details>  <br>
+     <p><strong>Question 7.3: Imagine that the population distribution of student screen time is highly skewed to the right, because a small number of teens use their phones for extremely long hours. You take random samples of n = 50 teenagers many times and plots the sampling distribution of the sample mean?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>Even though the population is skewed, the Central Limit Theorem tells us that with a large sample size (n = 50), the sampling distribution of the mean will be approximately normal.</p>
+  </details> <br> </details>
+<br>
+    <details><summary><strong style="font-size:20px;"> SECTION 8: CENTRAL LIMIT THEOREM (CLT) </strong></summary>   <br>
+    <p>Background: The CLT states that: for a sufficiently large sample size, the distribution of sample means will approximate a normal (bell curve) distribution, regardless of the shape of the original population distribution (Xang et al., 2023). Note that: The CLT shows that the variability of sample means (the standard error) decreases as sample size increases.</p>
+    <p>
+    In sum, there are 3 components to the CLT: 
+
+(1) You take 1 sample with large n -&gt; You take the sample’s mean
+
+(2) Then you take many samples (keeping the sample size constant) -&gt; You take each sample’s mean
+
+(3) Then, you plot all the means of your samples (not of the individual data)  
+    </p> <br>
+    <p><strong>Question 8.0: Which of the following best illustrates the Central Limit Theorem?</strong></p>  <input type="radio" name="q3" value="1"> The population becomes normal as sample size increases. <br>
+  <input type="radio" name="q3" value="2"> The sample mean always equals the population mean. <br>
+   <input type="radio" name="q3" value="3"> The sampling distribution of the mean approaches normality as sample size increases, regardless of population shape. <br>
+   <input type="radio" name="q3" value="4"> The sample distribution matches the population distribution exactly. <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>(3) The sampling distribution of the mean approaches normality as sample size increases, regardless of population shape.</p>
+  </details>  <br>
+     <p><strong>Question 8.1</strong></p>
+    <p>As discussed, you’ve taken the basic steps required to conduct an experiment. These steps are helpful because with your repeated sampling of your population, you are left with a normally distributed sampling distribution.
+    
+    This normal shape of your sampling means is a fundamental assumption of all the next analyses (which have been hinted at throughout this module) that will be further described in the upcoming modules.
+
+    Without a normal distribution of your sample means (a normally distributed sampling distribution), you can’t use it to make inferences about the population mean.
+    </p>
+    <p><strong>Does the Central Limit Theorem require the population distribution to be normal?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>No, the major advantage of the CLT is that the population distribution does not need to be normal. The CLT holds even when the population distribution is skewed or irregular, as long as the sample size is large enough.</p>
+  </details>  <br>
+     <p><strong>Question 8.2: What is the standard deviation of the sampling distribution of the mean called?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>The standard error of the sampling distribution.</p>
+  </details>  <br>
+     <p><strong>Question 8.3: What is the minimum sample size commonly considered “large enough” for the CLT to apply in many practical situations?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>A sample size of n ≥ 30 is often considered large enough for the CLT to give a good approximation. (This can vary depending on how skewed the population is).</p>
+  </details>  <br>
+     <p><strong>Question 8.4: Why is the Central Limit Theorem especially valuable when the population distribution of screen time is not normal?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>Because it allows researchers to use normal-based inference (confidence intervals, hypothesis tests) on sample means even when the population is skewed, as long as the sample size is large. This will be discussed in greater detail in the upcoming modules.</p>
+  </details>  <br>
+     <p><strong>Question 8.5: How would the sampling distribution change if the experimenter took more samples of the same size versus larger samples?</strong></p> <input><details style="margin-top:10px;margin-left:20px;">
+       <summary>Reveal Answer</summary>
+       <p>Larger samples make the distribution more normal and less variable; taking more samples does not change the shape, only gives more estimates.</p>
+  </details> <br> </details>
 
 
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -832,185 +1081,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 
 
